@@ -1,15 +1,20 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private UserDao userDao;
 
 
@@ -26,20 +31,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUser(String name, String lastName, int age) {
-        userDao.saveUser(name, lastName, age);
+    public void saveUser(String userName, String password, Collection<Role> roles, String name, String lastName, int age) {
+        userDao.saveUser(userName, password, roles, name, lastName, age);
     }
 
     @Override
     @Transactional
-    public void updateUser(long id, User updatedUser) {
+    public void updateUser(Long id, User updatedUser) {
         userDao.updateUser(id, updatedUser);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserById(long id) {
+    public User findUserById(Long id) {
         return userDao.findUserById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findUserByUsername(String userName) {
+        return userDao.findUserByUsername(userName);
     }
 
     @Override
@@ -47,4 +58,11 @@ public class UserServiceImpl implements UserService {
     public void removeUserById(long id) {
         userDao.removeUserById(id);
     }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return findUserByUsername(userName);
+    }
+
 }
