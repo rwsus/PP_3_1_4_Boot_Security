@@ -2,9 +2,11 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
@@ -13,10 +15,15 @@ import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
     private UserDao userDao;
+
+    @Autowired
+    private ApplicationContext context;
+    PasswordEncoder passwordEncoder;
 
 
     @Autowired
@@ -32,13 +39,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void saveUser(String userName, String password, Collection<Role> roles, String name, String lastName, int age) {
-        userDao.saveUser(userName, password, roles, name, lastName, age);
+    public void saveUser(String email, String password, Set<Role> roles, String name, String lastName, int age) {
+        passwordEncoder = context.getBean(PasswordEncoder.class);
+        password = passwordEncoder.encode(password);
+        userDao.saveUser(email, password, roles, name, lastName, age);
     }
 
     @Override
     @Transactional
     public void updateUser(Long id, User updatedUser) {
+        passwordEncoder = context.getBean(PasswordEncoder.class);
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         userDao.updateUser(id, updatedUser);
     }
 
@@ -50,8 +61,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserByUsername(String userName) {
-        return userDao.findUserByUsername(userName);
+    public User findUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
     }
 
     @Override
@@ -63,7 +74,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = findUserByUsername(userName);
+        User user = findUserByEmail(userName);
         Hibernate.initialize(user.getRoles());
         return user;
     }

@@ -9,6 +9,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -22,9 +24,14 @@ public class AdminController {
     }
 
     @GetMapping
-    public String index(ModelMap modelMap) {
+    public String index(ModelMap modelMap, Principal principal) {
         modelMap.addAttribute("users", userService.getAllUsers());
-        return "admin/index";
+        User currentUser = userService.findUserByEmail(principal.getName());
+        String rolesTrimmed = currentUser.trimRoles();
+        modelMap.addAttribute("rolesTrimmed", rolesTrimmed);
+        modelMap.addAttribute("currentUser", currentUser);
+
+        return "admin/admin_page";
     }
 
     @GetMapping("/{id}")
@@ -43,7 +50,7 @@ public class AdminController {
 
     @PostMapping
     public String createUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user.getUsername(), user.getPassword(), user.getRoles(),
+        userService.saveUser(user.getEmail(), user.getPassword(), user.getRoles(),
                 user.getName(), user.getLastname(), user.getAge());
         return "redirect:/admin";
     }

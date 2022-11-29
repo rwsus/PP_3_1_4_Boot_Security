@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -24,9 +25,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void saveUser(String userName, String password, Collection<Role> roles,
+    public void saveUser(String email, String password, Set<Role> roles,
                          String name, String lastName, int age) {
-        User user = new User(userName, password, roles, name, lastName, age);
+        User user = new User(email, password, roles, name, lastName, age);
         if (!roles.isEmpty()) {
             roles.forEach(r -> entityManager.persist(r));
         }
@@ -36,7 +37,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void updateUser(Long id, User updatedUser) {
         User userToBeUpdated = findUserById(id);
-        userToBeUpdated.setUsername(updatedUser.getUsername());
+        userToBeUpdated.setEmail(updatedUser.getEmail());
         userToBeUpdated.setPassword(updatedUser.getPassword());
         userToBeUpdated.setRoles(updatedUser.getRoles());
         userToBeUpdated.getRoles().forEach(r -> entityManager.persist(r));
@@ -46,10 +47,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByUsername(String userName) {
+    public User findUserByEmail(String email) {
         TypedQuery<User> query = entityManager.createQuery
-                ("select u from User u where u.username = :userNameParam", User.class);
-        query.setParameter("userNameParam", userName);
+                ("select u from User u where u.email = :emailParam", User.class);
+        query.setParameter("emailParam", email);
         List<User>results = query.getResultList();
         if(results.isEmpty()) {
             throw new UsernameNotFoundException("User not found");

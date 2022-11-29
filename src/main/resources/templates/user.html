@@ -1,23 +1,96 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>User</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>User Information Page</title>
 </head>
 <body>
-USER DATA PAGE
 
-<p th:text="${user.getUsername()}">value</p>
-<p th:text="${user.getName()}">value</p>
-<p th:text="${user.getLastname()}">value</p>
-<p th:text="${user.getAge()}">value</p>
+<!--SIGNIN BAR-->
+<nav class="navbar navbar-dark bg-dark text-white">
+    <div class="container-fluid">
+        <div class="text-left">
+            <h5 class="font-weight-light"
+                th:utext="'&lt;strong&gt;' + ${currentUser.getUsername()} + '&lt;/strong&gt;' + ' with roles:' + ${rolesTrimmed}">
+            </h5>
+        </div>
+        <div class="text-right">
+            <form th:action="@{/logout}" method="post">
+                <input class="btn btn-link text-secondary" type="submit" value="Logout"/>
+            </form>
+        </div>
+    </div>
+</nav>
 
-<br>
+<!--PANEL-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 bg-white pl-0 pr-0 mt-2">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-user-tab" data-toggle="pill" href="#v-pills-user"
+                   role="tab" aria-controls="v-pills-user" aria-selected="true">User</a>
+            </div>
+        </div>
+        <div class="col-10" style="background-color: #f0f3f5">
+            <div class="tab-content" id="v-pills-tabContent">
 
-<a href="/">home</a>
+                <div class="tab-pane fade" id="v-pills-user"
+                     role="tabpanel" aria-labelledby="v-pills-user-tab"><h1 class="text mt-1">User information-page</h1>
+                </div>
+                <div class="card">
+                    <table class="table table-striped">
+                        <h5 class="card-header">About user</h5>
+                        <div class="card-body">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th class="font-weight-light" scope="row" th:text="${currentUser.getId()}">value</th>
+                                <td th:text="${currentUser.getName()}">value</td>
+                                <td th:text="${currentUser.getLastname()}">value</td>
+                                <td th:text="${currentUser.getAge()}">value</td>
+                                <td th:text="${currentUser.getEmail()}">value</td>
+                                <td th:text="${currentUser.trimRoles()}">value</td>
 
-<form th:action="@{/logout}" method="post">
-    <button type="submit">logout</button>
-</form>
+                            </tr>
+                        </div>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
 </body>
 </html>

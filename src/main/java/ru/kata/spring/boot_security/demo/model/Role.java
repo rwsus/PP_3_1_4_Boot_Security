@@ -64,6 +64,9 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
+        if (roleName.startsWith("ROLE_")) {
+            return roleName.substring(5);
+        }
         return roleName;
     }
 }
