@@ -42,10 +42,14 @@ public class AdminController {
     }
 
     @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getRoles());
-        return "admin/new";
+    public String newUser(ModelMap modelMap, Principal principal) {
+        User currentUser = userService.findUserByEmail(principal.getName());
+        String rolesTrimmed = currentUser.trimRoles();
+        modelMap.addAttribute("rolesTrimmed", rolesTrimmed);
+        modelMap.addAttribute("currentUser", currentUser);
+        modelMap.addAttribute("user", new User());
+        modelMap.addAttribute("roles", roleService.getRoles());
+        return "/admin/admin_page";
     }
 
     @PostMapping

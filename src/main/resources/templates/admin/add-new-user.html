@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Admin Page</title>
+    <title>New User Page</title>
 </head>
 <body>
 
@@ -50,77 +50,54 @@
                 <div class="tab-pane fade show active" id="v-pills-admin"
                      role="tabpanel" aria-labelledby="v-pills-admin-tab"><h1 class="text mt-1">Admin panel</h1>
 
-
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" role="tab" href="#userlist">Users Table</a>
+                            <a class="nav-link " data-toggle="tab" role="tab" aria-current="page" href="/admin">Users Table</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" role="tab" href="#newuser">New User</a>
+                            <a class="nav-link active" data-toggle="tab" role="tab" aria-current="page" href="/admin/new">New User</a>
                         </li>
                     </ul>
-
-                    <div class="tab-content" id="nav-tabs-Content">
-
-
-                        <div class="tab-pane fade show active" id="userlist"
-                             role="tabpanel" >
-
                     <div class="card">
-                        <table class="table table-striped">
-                            <h5 class="card-header">All users</h5>
+                            <h5 class="card-header">Add New User</h5>
                             <div class="card-body">
-                                <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Edit</th>
-                                    <th scope="col">Delete</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <div th:each="user : ${users}">
-                                    <tr>
-                                        <th class="font-weight-light" scope="row" th:text="${user.getId()}">value</th>
-                                        <td th:text="${user.getName()}">value</td>
-                                        <td th:text="${user.getLastname()}">value</td>
-                                        <td th:text="${user.getAge()}">value</td>
-                                        <td th:text="${user.getEmail()}">value</td>
-                                        <td th:text="${user.trimRoles()}">value</td>
-                                        <td>
-                                            <a class="btn btn-info" th:href="@{/admin/{id}/edit(id=${user.getId()})}"
-                                               role="button">Edit</a>
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-danger text-white" th:method="DELETE"
-                                               th:action="@{/admin/{id}(id=${user.getId()})}"
-                                               role="button">Delete</a>
-                                        </td>
-                                    </tr>
-                                </div>
-                                </tbody>
+
+                                <form th:method="POST" th:action="@{/admin}" th:object="${user}">
+                                    <label>User Name:
+                                        <input type="text" th:field="*{username}" th:id="username"/>
+                                    </label>
+                                    <br>
+                                    <label>Password:
+                                        <input type="text" th:field="*{password}" th:id="password"/>
+                                    </label>
+                                    <br>
+                                    <label>Role:
+                                        <input type="text" th:field="*{roles}" th:id="roles"/>
+                                    </label>
+                                    <br>
+                                    <label>Name:
+                                        <input type="text" th:field="*{name}" th:id="name"/>
+                                    </label>
+                                    <br>
+                                    <label>Lastname:
+                                        <input type="text" th:field="*{lastname}" th:id="lastname"/>
+                                    </label>
+                                    <br>
+                                    <label>Age:
+                                        <input type="text" th:field="*{age}" th:id="age"/>
+                                    </label>
+                                    <br><br>
+                                    <input type="submit" value="Create"/>
+                                </form>
+
+
+
+
+
+
                             </div>
-                        </table>
                     </div>
-                        </div>
-<!--                    NEW USER-->
-                        <div class="tab-pane fade " id="newuser"
-                             role="tabpanel" ><h1 class="text mt-1">Add New User</h1>
-
-                            MAGOK MAGOK
-
-
-
-
-                        </div>
-                        </div>
-                    </div>
-
-<!--                    finish of admin active area-->
+                </div>
 
 <!--                User Information Panel-->
                 <div class="tab-pane fade" id="v-pills-user"
@@ -151,12 +128,16 @@
                                     <td th:text="${currentUser.trimRoles()}">value</td>
 
                                 </tr>
+                                </tbody>
                             </div>
-                            </tbody>
+
                         </table>
                     </div>
                 </div>
-            </div>
+<!--                NEW USER TAB-->
+
+
+
             </div>
         </div>
 
