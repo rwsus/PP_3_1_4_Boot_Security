@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
+import ru.kata.spring.boot_security.demo.dao.RoleDaoImpl;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -42,6 +44,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void saveUser(String email, String password, Set<Role> roles, String name, String lastName, int age) {
         passwordEncoder = context.getBean(PasswordEncoder.class);
         password = passwordEncoder.encode(password);
+//        if (roles.isEmpty()) {
+//            roles.add(context.getBean(RoleServiceImpl.class).getRole(2L));
+//        } else roles.add()
         userDao.saveUser(email, password, roles, name, lastName, age);
     }
 

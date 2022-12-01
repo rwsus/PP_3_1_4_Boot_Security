@@ -47,7 +47,7 @@ public class AdminController {
         String rolesTrimmed = currentUser.trimRoles();
         modelMap.addAttribute("rolesTrimmed", rolesTrimmed);
         modelMap.addAttribute("currentUser", currentUser);
-        modelMap.addAttribute("user", new User());
+        modelMap.addAttribute("newUser", new User());
         modelMap.addAttribute("roles", roleService.getRoles());
         return "/admin/admin_page";
     }

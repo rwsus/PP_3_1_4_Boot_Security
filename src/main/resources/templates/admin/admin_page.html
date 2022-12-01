@@ -113,7 +113,7 @@
                         <!--                    NEW USER-->
                         <div class="tab-pane fade " id="newuser"
                              role="tabpanel">
-<!--                            <h5 class="text mt-2">Add New User</h5>-->
+
                             <div class="card">
 
                                 <table class="table table-striped">
@@ -121,7 +121,7 @@
                                     <h5 class="card-header">Add New User</h5>
 
                                 <div class="card-body">
-                                <form role="form" th:method="POST" th:action="@{/admin}" th:object="${user}">
+                                <form role="form" th:method="POST" th:action="@{/admin}" th:object="${newUser}">
                                     <div class="row justify-content-center text-center">
                                         <div class="col-4">
                                     <div class="form-group">
@@ -150,44 +150,20 @@
                                                        placeholder="Password">
                                             </div>
                                             <div class="form-group">
-                                                <label for="roles"><strong>Role</strong></label>
-                                                <input type="text" class="form-control" id="roles" name="roles"
-                                                       placeholder="Role">
+                                                <label for="roles-select"><strong>Role</strong></label>
+                                                <select multiple class="form-control" id="roles-select"
+                                                        name="roles" size="2" required>
+                                                    <option th:each="role: ${currentUser.getRoles()} ">
+                                                        <th:block th:text="${role}"></th:block>
+                                                    </option>
+
+                                                </select>
                                             </div>
 
                                             <button class="btn btn-success">Add New User</button>
 
                                         </div>
                                     </div>
-
-
-<!--                                    <form th:method="POST" th:action="@{/admin}" th:object="${user}">-->
-<!--                                        <label>User Name:-->
-<!--                                            <input type="text" th:field="*{username}" th:id="username"/>-->
-<!--                                        </label>-->
-<!--                                        <br>-->
-<!--                                        <label>Password:-->
-<!--                                            <input type="text" th:field="*{password}" th:id="password"/>-->
-<!--                                        </label>-->
-<!--                                        <br>-->
-<!--                                        <label>Role:-->
-<!--                                            <input type="text" th:field="*{roles}" th:id="roles"/>-->
-<!--                                        </label>-->
-<!--                                        <br>-->
-<!--                                        <label>Name:-->
-<!--                                            <input type="text" th:field="*{name}" th:id="name"/>-->
-<!--                                        </label>-->
-<!--                                        <br>-->
-<!--                                        <label>Lastname:-->
-<!--                                            <input type="text" th:field="*{lastname}" th:id="lastname"/>-->
-<!--                                        </label>-->
-<!--                                        <br>-->
-<!--                                        <label>Age:-->
-<!--                                            <input type="text" th:field="*{age}" th:id="age"/>-->
-<!--                                        </label>-->
-<!--                                        <br><br>-->
-<!--                                        <input type="submit" value="Create"/>-->
-<!--                                    </form>-->
                                 </form>
                                 </div>
                                 </table>

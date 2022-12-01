@@ -18,6 +18,7 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public List<User> getAllUsers() {
         TypedQuery<User> query = entityManager.createQuery("select a from User a", User.class);
@@ -29,7 +30,10 @@ public class UserDaoImpl implements UserDao {
                          String name, String lastName, int age) {
         User user = new User(email, password, roles, name, lastName, age);
         if (!roles.isEmpty()) {
-            roles.forEach(r -> entityManager.persist(r));
+            roles.forEach(r -> {
+                r.addRolePrefix();
+                entityManager.persist(r);
+            });
         }
         entityManager.persist(user);
     }
@@ -40,7 +44,8 @@ public class UserDaoImpl implements UserDao {
         userToBeUpdated.setEmail(updatedUser.getEmail());
         userToBeUpdated.setPassword(updatedUser.getPassword());
         userToBeUpdated.setRoles(updatedUser.getRoles());
-        userToBeUpdated.getRoles().forEach(r -> entityManager.persist(r));
+//        userToBeUpdated.getRoles().forEach(r -> entityManager.persist(r));
+        entityManager.persist(userToBeUpdated.getRoles());
         userToBeUpdated.setName(updatedUser.getName());
         userToBeUpdated.setLastname(updatedUser.getLastname());
         userToBeUpdated.setAge(updatedUser.getAge());

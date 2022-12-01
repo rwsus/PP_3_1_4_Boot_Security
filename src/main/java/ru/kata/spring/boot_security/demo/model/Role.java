@@ -69,4 +69,9 @@ public class Role implements GrantedAuthority {
         }
         return roleName;
     }
+    public void addRolePrefix() {
+        if (!roleName.startsWith("ROLE_")) {
+            roleName = "ROLE_" + roleName;
+        }
+    }
 }
