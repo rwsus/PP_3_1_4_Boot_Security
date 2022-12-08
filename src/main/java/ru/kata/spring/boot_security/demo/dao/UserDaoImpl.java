@@ -8,7 +8,6 @@ import ru.kata.spring.boot_security.demo.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -41,14 +40,21 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void updateUser(Long id, User updatedUser) {
         User userToBeUpdated = findUserById(id);
+        userToBeUpdated.setLastname(updatedUser.getLastname());
+        userToBeUpdated.setAge(updatedUser.getAge());
         userToBeUpdated.setEmail(updatedUser.getEmail());
         userToBeUpdated.setPassword(updatedUser.getPassword());
         userToBeUpdated.setRoles(updatedUser.getRoles());
-//        userToBeUpdated.getRoles().forEach(r -> entityManager.persist(r));
-        entityManager.persist(userToBeUpdated.getRoles());
         userToBeUpdated.setName(updatedUser.getName());
-        userToBeUpdated.setLastname(updatedUser.getLastname());
-        userToBeUpdated.setAge(updatedUser.getAge());
+
+        if (!userToBeUpdated.getRoles().isEmpty()) {
+            userToBeUpdated.getRoles().forEach(r -> {
+                r.addRolePrefix();
+                entityManager.persist(r);
+            });
+        }
+//        userToBeUpdated.getRoles().forEach(r -> entityManager.persist(r));
+
     }
 
     @Override

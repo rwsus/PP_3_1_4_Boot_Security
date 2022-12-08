@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -30,7 +29,6 @@ public class AdminController {
         String rolesTrimmed = currentUser.trimRoles();
         modelMap.addAttribute("rolesTrimmed", rolesTrimmed);
         modelMap.addAttribute("currentUser", currentUser);
-
         return "admin/admin_page";
     }
 
@@ -49,6 +47,7 @@ public class AdminController {
         modelMap.addAttribute("currentUser", currentUser);
         modelMap.addAttribute("newUser", new User());
         modelMap.addAttribute("roles", roleService.getRoles());
+
         return "/admin/admin_page";
     }
 
@@ -62,7 +61,8 @@ public class AdminController {
     @GetMapping("/{id}/edit")
     public String editUser(ModelMap modelMap, @PathVariable("id") Long id) {
         modelMap.addAttribute("user", userService.findUserById(id));
-        return "admin/edit";
+        modelMap.addAttribute("roles", roleService.getRoles());
+        return "admin/admin_page";
     }
 
     @PatchMapping("/{id}")
