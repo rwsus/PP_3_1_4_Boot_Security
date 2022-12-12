@@ -8,7 +8,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Integer> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
     @Override
-    Optional<Role> findById(Integer id);
+    Optional<Role> findById(Long id);
 }

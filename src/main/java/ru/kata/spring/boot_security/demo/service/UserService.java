@@ -10,10 +10,10 @@ public interface UserService{
     List<User> getAllUsers();
 
     void saveUser(User user);
-    void updateUser(Integer id, User updatedUser);
-    User findUserById(Integer id);
+    void updateUser(Long id, User updatedUser);
+    User findUserById(Long id);
     User findUserByEmail(String email);
 
-    void deleteUserById(Integer id);
+    void deleteUserById(Long id);
 
 }
