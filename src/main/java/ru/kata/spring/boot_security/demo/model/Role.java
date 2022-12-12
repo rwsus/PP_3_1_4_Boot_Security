@@ -12,7 +12,7 @@ public class Role implements GrantedAuthority {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(name = "role")
     private String roleName;
     @Transient
@@ -23,7 +23,6 @@ public class Role implements GrantedAuthority {
     public Role() {
     }
 
-
     public Role(String roleName) {
         this.roleName = roleName;
     }
@@ -32,7 +31,15 @@ public class Role implements GrantedAuthority {
         return roleName;
     }
 
-    public void setRole(String roleName) {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 

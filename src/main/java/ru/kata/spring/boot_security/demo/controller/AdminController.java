@@ -33,7 +33,7 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    public String showUserByID(@PathVariable("id") long id, ModelMap modelMap) {
+    public String showUserByID(@PathVariable("id") Integer id, ModelMap modelMap) {
         modelMap.addAttribute("user", userService.findUserById(id));
         System.out.println(userService.findUserById(id));
         return "/admin/show";
@@ -53,27 +53,26 @@ public class AdminController {
 
     @PostMapping
     public String createUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user.getEmail(), user.getPassword(), user.getRoles(),
-                user.getName(), user.getLastname(), user.getAge());
+        userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/{id}/edit")
-    public String editUser(ModelMap modelMap, @PathVariable("id") Long id) {
+    public String editUser(ModelMap modelMap, @PathVariable("id") Integer id) {
         modelMap.addAttribute("user", userService.findUserById(id));
         modelMap.addAttribute("roles", roleService.getRoles());
         return "admin/admin_page";
     }
 
     @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Integer id) {
         userService.updateUser(id, user);
         return "redirect:/admin";
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userService.removeUserById(id);
+    public String deleteUser(@PathVariable("id") Integer id) {
+        userService.deleteUserById(id);
         return "redirect:/admin";
     }
 

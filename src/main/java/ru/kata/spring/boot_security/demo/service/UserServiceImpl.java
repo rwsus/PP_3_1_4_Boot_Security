@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,72 +8,84 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private final UserDao userDao;
-
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
     @Autowired
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
     @Transactional
-    public void saveUser(String email, String password, Set<Role> roles, String name, String lastName, int age) {
-        password = passwordEncoder.encode(password);
-//        if (roles.isEmpty()) {
-//            roles.add(context.getBean(RoleServiceImpl.class).getRole(2L));
-//        } else roles.add()
-        userDao.saveUser(email, password, roles, name, lastName, age);
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(Long id, User updatedUser) {
+    public void updateUser(Integer id, User updatedUser) {
         updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-        userDao.updateUser(id, updatedUser);
+        User userToBeUpdated = findUserById(id);
+
+        userToBeUpdated.setLastname(updatedUser.getLastname());
+        userToBeUpdated.setAge(updatedUser.getAge());
+        userToBeUpdated.setEmail(updatedUser.getEmail());
+        userToBeUpdated.setPassword(updatedUser.getPassword());
+        userToBeUpdated.setRoles(updatedUser.getRoles());
+        userToBeUpdated.setName(updatedUser.getName());
+        userRepository.save(userToBeUpdated);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserById(Long id) {
-        return userDao.findUserById(id);
+    public User findUserById(Integer id) {
+        return userRepository.findById(id).get();
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
-        return userDao.findUserByEmail(email);
+        return userRepository.findUserByUsername(email);
     }
 
     @Override
     @Transactional
-    public void removeUserById(long id) {
-        userDao.removeUserById(id);
+    public void deleteUserById(Integer id) {
+        userRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = findUserByEmail(userName);
-        Hibernate.initialize(user.getRoles());
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        //Hibernate.initialize(user.getRoles());
         return user;
     }
 
