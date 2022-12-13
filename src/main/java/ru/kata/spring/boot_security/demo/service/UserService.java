@@ -10,8 +10,11 @@ public interface UserService {
     List<User> getAllUsers();
 
     void saveUser(String email, String password, Set<Role> roles, String name, String lastName, int age);
+
     void updateUser(Long id, User updatedUser);
+
     User findUserById(Long id);
+
     User findUserByEmail(String email);
 
     void removeUserById(long id);
