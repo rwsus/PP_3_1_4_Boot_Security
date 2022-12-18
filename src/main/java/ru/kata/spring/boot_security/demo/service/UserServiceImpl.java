@@ -58,9 +58,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userToBeUpdated.setAge(updatedUser.getAge());
         userToBeUpdated.setEmail(updatedUser.getEmail());
         userToBeUpdated.setPassword(updatedUser.getPassword());
+
         userToBeUpdated.setRoles(updatedUser.getRoles());
         userToBeUpdated.setName(updatedUser.getName());
-        userRepository.save(userToBeUpdated);
+        if (!userToBeUpdated.getRoles().isEmpty()) {
+            userToBeUpdated.getRoles().forEach(r -> {
+                r.addRolePrefix();
+                roleRepository.save(r);
+            });
+        }
+
+        //userRepository.save(userToBeUpdated);
     }
 
     @Override
@@ -87,13 +95,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User '%s' not found", username));
         }
-        //Hibernate.initialize(user.getRoles());
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(), mapRolesToAuthorities(user.getRoles()));
-    }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
+        return user;
     }
 
 }
