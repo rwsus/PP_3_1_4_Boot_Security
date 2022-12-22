@@ -168,6 +168,6 @@ public class User implements UserDetails {
 
     public String trimRoles() {
         String adminRoles = getRoles().toString();
-        return adminRoles.replaceAll("[\\[\\]]", " ");
+        return adminRoles.replaceAll("[\\,\\[\\]]", " ");
     }
 }
