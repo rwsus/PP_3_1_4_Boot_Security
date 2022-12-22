@@ -95,7 +95,6 @@ public class User implements UserDetails {
     }
 
 
-
     public String getEmail() {
         return email;
     }
@@ -141,7 +140,12 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return age == user.age && Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(name, user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(roles, user.roles);
+        return age == user.age && Objects.equals(id, user.id)
+                && Objects.equals(email, user.email)
+                && Objects.equals(password, user.password)
+                && Objects.equals(name, user.name)
+                && Objects.equals(lastName, user.lastName)
+                && Objects.equals(roles, user.roles);
     }
 
     @Override
@@ -161,9 +165,9 @@ public class User implements UserDetails {
                 ", roles=" + roles +
                 '}';
     }
+
     public String trimRoles() {
         String adminRoles = getRoles().toString();
-        String rolesTrimmed = adminRoles.replaceAll("[\\,\\[\\]]", " ");
-        return rolesTrimmed;
+        return adminRoles.replaceAll("[\\[\\]]", " ");
     }
 }

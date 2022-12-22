@@ -3,8 +3,8 @@ package ru.kata.spring.boot_security.demo.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -17,13 +17,18 @@ public class Role implements GrantedAuthority {
     private String roleName;
     @Transient
     @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    private Set<User> users;
 
 
     public Role() {
     }
 
     public Role(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Role(Long id, String roleName) {
+        this.id = id;
         this.roleName = roleName;
     }
 
@@ -43,11 +48,11 @@ public class Role implements GrantedAuthority {
         this.roleName = roleName;
     }
 
-    public Collection<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
@@ -75,10 +80,5 @@ public class Role implements GrantedAuthority {
             return roleName.substring(5);
         }
         return roleName;
-    }
-    public void addRolePrefix() {
-        if (!roleName.startsWith("ROLE_")) {
-            roleName = "ROLE_" + roleName;
-        }
     }
 }

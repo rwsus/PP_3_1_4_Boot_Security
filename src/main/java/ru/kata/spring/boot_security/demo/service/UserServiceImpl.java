@@ -45,6 +45,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!user.getRoles().isEmpty()) {
+            user.getRoles().forEach(r -> {
+
+                if (r.getRoleName().contains("ADMIN")) {
+                    r = roleRepository.getById(1L);
+
+                } else {
+                    r = roleRepository.getById(2L);
+                }
+            });
+        }
         userRepository.save(user);
     }
 
@@ -58,17 +69,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userToBeUpdated.setAge(updatedUser.getAge());
         userToBeUpdated.setEmail(updatedUser.getEmail());
         userToBeUpdated.setPassword(updatedUser.getPassword());
-
-        userToBeUpdated.setRoles(updatedUser.getRoles());
         userToBeUpdated.setName(updatedUser.getName());
-        if (!userToBeUpdated.getRoles().isEmpty()) {
-            userToBeUpdated.getRoles().forEach(r -> {
-                r.addRolePrefix();
-                roleRepository.save(r);
+        if (!updatedUser.getRoles().isEmpty()) {
+            updatedUser.getRoles().forEach(r -> {
+
+                if (r.getRoleName().contains("ADMIN")) {
+                    roleRepository.getById(1L);
+
+                } else {
+                    roleRepository.getById(2L);
+                }
             });
         }
+        userToBeUpdated.setRoles(updatedUser.getRoles());
 
-        //userRepository.save(userToBeUpdated);
     }
 
     @Override
@@ -95,7 +109,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User '%s' not found", username));
         }
-        return user;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
+
+    public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
+    }
+
 
 }

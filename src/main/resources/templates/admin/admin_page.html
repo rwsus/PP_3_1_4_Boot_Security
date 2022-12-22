@@ -186,14 +186,9 @@
                                                                                 <label><strong> Role </strong></label>
                                                                                 <select multiple class="form-control"
                                                                                         name="roles" size="2" required>
-                                                                                    <option th:each="role: ${currentUser.roles}"
-                                                                                            th:value="${role}"
-                                                                                            th:selected="${user.roles.contains(role)}">
 
-                                                                                        <th:block
-                                                                                                th:text="${role}"></th:block>
-
-                                                                                    </option>
+                                                                                    <option value="1">ADMIN</option>
+                                                                                    <option selected="selected" value="2">USER</option>
 
                                                                                 </select>
 
@@ -304,7 +299,7 @@
                                                                                 <select disabled multiple
                                                                                         class="form-control"
                                                                                         name="roles" size="2" required>
-                                                                                    <option th:each="role: ${currentUser.roles}"
+                                                                                    <option th:each="role: ${roles}"
                                                                                             th:value="${role}">
 
                                                                                         <th:block
@@ -395,11 +390,9 @@
                                                         <label for="roles-select"><strong>Role</strong></label>
                                                         <select multiple class="form-control" id="roles-select"
                                                                 name="roles" size="2" required>
-                                                            <option th:each="role: ${currentUser.getRoles()}">
 
-                                                                <th:block th:text="${role}"></th:block>
-
-                                                            </option>
+                                                            <option value="1">ADMIN</option>
+                                                            <option selected="selected" value="2">USER</option>
 
                                                         </select>
                                                     </div>
@@ -450,8 +443,9 @@
                                     <td th:text="${currentUser.trimRoles()}">value</td>
 
                                 </tr>
-                            </div>
+
                             </tbody>
+                            </div>
                         </table>
                     </div>
                 </div>

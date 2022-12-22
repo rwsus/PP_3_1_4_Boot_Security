@@ -19,6 +19,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     @GetMapping
     public String showUser(ModelMap modelMap, Principal principal) {
         User currentUser = userService.findUserByEmail(principal.getName());

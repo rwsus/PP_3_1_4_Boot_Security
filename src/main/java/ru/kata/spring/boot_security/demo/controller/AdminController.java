@@ -29,6 +29,7 @@ public class AdminController {
         String rolesTrimmed = currentUser.trimRoles();
         modelMap.addAttribute("rolesTrimmed", rolesTrimmed);
         modelMap.addAttribute("currentUser", currentUser);
+        modelMap.addAttribute("roles", roleService.getRoles());
         return "admin/admin_page";
     }
 
@@ -36,7 +37,8 @@ public class AdminController {
     public String showUserByID(@PathVariable("id") Long id, ModelMap modelMap) {
         modelMap.addAttribute("user", userService.findUserById(id));
         System.out.println(userService.findUserById(id));
-        return "/admin/show";
+        modelMap.addAttribute("roles", roleService.getRoles());
+        return "admin/admin_page";
     }
 
     @GetMapping("/new")
@@ -44,7 +46,6 @@ public class AdminController {
         User currentUser = userService.findUserByEmail(principal.getName());
         String rolesTrimmed = currentUser.trimRoles();
         modelMap.addAttribute("rolesTrimmed", rolesTrimmed);
-        modelMap.addAttribute("currentUser", currentUser);
         modelMap.addAttribute("newUser", new User());
         modelMap.addAttribute("roles", roleService.getRoles());
 
@@ -60,7 +61,6 @@ public class AdminController {
     @GetMapping("/{id}/edit")
     public String editUser(ModelMap modelMap, @PathVariable("id") Long id) {
         modelMap.addAttribute("user", userService.findUserById(id));
-        modelMap.addAttribute("roles", roleService.getRoles());
         return "admin/admin_page";
     }
 
